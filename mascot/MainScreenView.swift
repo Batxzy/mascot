@@ -5,45 +5,61 @@
 //  Created by Jose julian Lopez on 07/05/25.
 //
 import SwiftUI
+import PhotosUI
 
 struct MainScreenView: View {
-    // Using the modern @State for the PetManager
     @State private var petManager = PetManager()
     @State private var showAddPet = false
-    
+    @State private var showSettingsOverlay = false
+
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background color for the side panels
-                Color(red: 0.8, green: 0.4, blue: 0.4)
-                    .ignoresSafeArea()
-                
-                // Main content container
                 VStack(spacing: 0) {
-                    // Content area
-                    VStack {
-                        // Logo and welcome area
-                        VStack {
-                            ZStack {
-                                Circle()
-                                    .fill(Color(red: 1, green: 0.4, blue: 0.4))
-                                    .frame(width: 140, height: 140)
-                                
-                                Image(systemName: "pawprint.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 80, height: 80)
-                                    .symbolRenderingMode(.hierarchical)
+                    // Custom top bar
+                    HStack {
+                        Button(action: {
+                            // Always wrap in withAnimation to ensure consistent behavior
+                            withAnimation(.spring(.smooth)) {
+                                showSettingsOverlay.toggle()
                             }
-                            .padding(.bottom, 10)
-                            
+                        }) {
+                            Image(systemName: "gearshape.fill")
+                                .foregroundStyle(.gray.opacity(0.7))
+                                .font(.system(size: 35))
+                                .symbolEffect(.pulse, options: .repeating.speed(0.5), isActive: showSettingsOverlay)
+                        }
+                        .padding(.leading, 12)
+
+                        Spacer()
+
+                        Button(action: {
+                            showAddPet = true
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                                .font(.system(size: 37))
+                        }
+                        .padding(.trailing, 12)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 12)
+                    .zIndex(2)
+
+                    // Main content container
+                    VStack(spacing: 0) {
+                        // Logo and welcome area
+                        VStack(spacing: 8) {
+                            Image("Simbolodeentrada")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 235, height: 235)
+
                             Text("¡Bienvenido!")
                                 .font(.custom("Noteworthy-Bold", size: 36))
                                 .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
                         }
-                        .padding(.vertical)
-                        
+
                         // Pet cards in scroll view with improved styling
                         if petManager.pets.isEmpty {
                             ContentUnavailableView {
@@ -65,69 +81,208 @@ struct MainScreenView: View {
                                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                                     }
                                 }
-                                .padding(.horizontal)
-                                .animation(.spring(duration: 0.5), value: petManager.pets)
+                                .padding(15)
+                                .animation(.spring(.smooth), value: petManager.pets)
                             }
                             .scrollIndicators(.hidden)
-                            .scrollClipDisabled()
                         }
-                        
+
                         Spacer()
-                        
                     }
                     .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(action: {
-                        // Settings action
-                    }) {
-                        Image(systemName: "gearshape.fill")
-                            .foregroundStyle(.gray)
-                            .symbolEffect(.pulse, options: .repeating.speed(0.5), isActive: false)
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        showAddPet = true
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(.white)
-                            .symbolRenderingMode(.hierarchical)
-                            .font(.system(size: 24))
-                    }
-                }
-            }
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                // Add sample data if needed
-                if petManager.pets.isEmpty {
-                    petManager.addPet(Pet(
-                        name: "Mazapán",
-                        sex: .female,
-                        species: .cat,
-                        breed: "Mixto",
-                        isSterilized: true
-                    ))
-                    
-                    petManager.addPet(Pet(
-                        name: "Boss",
-                        sex: .male,
-                        species: .dog,
-                        breed: "PitBull Terrier Americano",
-                        isSterilized: false
-                    ))
+                .zIndex(0)
+
+                // Settings overlay with consistent animation
+                if showSettingsOverlay {
+                    SettingsOverlayView(isShowing: $showSettingsOverlay)
+                        .transition(.move(edge: .leading))
+                        .zIndex(10)
                 }
             }
             .sheet(isPresented: $showAddPet) {
-                // Use your PetRegistrationView instead
                 PetRegistrationView(petManager: petManager)
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
+            }
+        }
+    }
+}
+struct SettingsOverlayView: View {
+    @Binding var isShowing: Bool
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                // Dimmed background
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                            isShowing = false
+                        }
+                    }
+                
+                VStack(spacing: 0) {
+                    VStack {
+                        ZStack {
+                            Group {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.2))
+                                    .frame(width: 110, height: 110)
+                                
+                                if let selectedImage {
+                                    Image(uiImage: selectedImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 90, height: 90)
+                                        .clipShape(Circle())
+                                } else {
+                                    Image(systemName: "person.fill")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 60, height: 60)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                            .background(.white)
+                            .clipShape(Circle())
+
+                            // Camera button with tap gesture to open image picker
+                            Button {
+                                showImagePicker = true
+                            } label: {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 36, height: 36)
+                                    .overlay(
+                                        Image(systemName: "camera.fill")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 18, height: 18)
+                                            .foregroundColor(.gray)
+                                    )
+                                    .shadow(radius: 1)
+                            }
+                            .offset(x: 38, y: 38)
+                        }
+                        .padding(.top, 90)
+                        .padding(.bottom, 20)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color(red: 1, green: 0.4, blue: 0.4))
+                    
+                    VStack(spacing: 0) {
+                        Button(action: {
+                            // Handle profile action
+                        }) {
+                            HStack(spacing: 15) {
+                                Image(systemName: "person.fill")
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.gray)
+                                
+                                Text("Perfil")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(.black)
+                                
+                                Spacer()
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                        
+                        Button(action: {
+                            // Handle notifications action
+                        }) {
+                            HStack(spacing: 15) {
+                                Image(systemName: "bell.fill")
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.gray)
+                                
+                                Text("Notificaciones")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(.black)
+                                
+                                Spacer()
+                            }
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        Spacer()
+                    }
+                    .background(Color.white)
+                    .frame(maxHeight: .infinity)
+                }
+                .frame(width: min(geometry.size.width * 0.70, 300), height: geometry.size.height)
+                .background(Color.white)
+                .edgesIgnoringSafeArea(.vertical)
+                .shadow(radius: 15)
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePicker(selectedImage: $selectedImage)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+            }
+        }
+        .edgesIgnoringSafeArea(.all)
+        .transition(.asymmetric(
+            insertion: .move(edge: .leading).combined(with: .opacity),
+            removal: .move(edge: .leading).combined(with: .opacity)
+        ))
+    }
+}
+
+// Modern Image Picker using PhotosUI
+struct ImagePicker: UIViewControllerRepresentable {
+    @Binding var selectedImage: UIImage?
+    @Environment(\.dismiss) private var dismiss
+    
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let parent: ImagePicker
+        
+        init(_ parent: ImagePicker) {
+            self.parent = parent
+        }
+        
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            // Dismiss picker
+            picker.dismiss(animated: true)
+            
+            // Exit if no selection
+            guard let result = results.first else { return }
+            
+            // Load selected image
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                    guard let image = image as? UIImage, error == nil else { return }
+                    
+                    // Update on main thread
+                    DispatchQueue.main.async {
+                        self?.parent.selectedImage = image
+                    }
+                }
             }
         }
     }
@@ -145,7 +300,6 @@ struct PetCardView: View {
                     .fill(Color(red: 1, green: 0.4, blue: 0.4))
                     .frame(width: 60, height: 60)
                 
-                // Use the pet's image if available, otherwise use SF Symbol
                 if let petImage = pet.image {
                     petImage
                         .resizable()

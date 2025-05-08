@@ -100,3 +100,61 @@ struct Pet: Identifiable, Hashable, Codable {
         pets.filter { $0.sex == sex }
     }
 }
+
+
+enum Gender: String, CaseIterable, Identifiable {
+    case female = "Femenino"
+    case male = "Masculino"
+    case nonBinary = "No binario"
+    
+    var id: String { self.rawValue }
+    
+    var symbol: String {
+        switch self {
+        case .female: return "♀"
+        case .male: return "♂"
+        case .nonBinary: return "⚧"
+        }
+    }
+}
+
+// User model with public initializer
+struct User: Identifiable {
+    var id = UUID()
+    var name: String
+    var gender: Gender
+    var birthDate: Date
+    var phoneNumber: String
+    var country: String
+    private var uiImage: UIImage?
+    
+    // Explicitly public initializer
+    init(name: String, gender: Gender, birthDate: Date, phoneNumber: String, country: String) {
+        self.name = name
+        self.gender = gender
+        self.birthDate = birthDate
+        self.phoneNumber = phoneNumber
+        self.country = country
+    }
+    
+    var image: Image? {
+        if let uiImage = uiImage {
+            return Image(uiImage: uiImage)
+        }
+        return nil
+    }
+    
+    mutating func setImage(_ image: UIImage) {
+        self.uiImage = image
+    }
+}
+
+// User Manager
+@Observable class UserManager {
+    var currentUser: User?
+    
+    func saveUser(_ user: User) {
+        self.currentUser = user
+        // Here you would typically save to UserDefaults, CoreData, or backend
+    }
+}
