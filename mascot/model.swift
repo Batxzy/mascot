@@ -1,0 +1,102 @@
+//
+//  model.swift
+//  mascot
+//
+//  Created by Jose julian Lopez on 07/05/25.
+//
+
+import SwiftUI
+
+// MARK: - Enums
+
+/// Pet species options - limited to dog/cat with ability to expand
+enum PetSpecies: String, CaseIterable, Identifiable, Codable {
+    case dog = "Perro"
+    case cat = "Gato"
+    // Add more as needed
+    
+    var id: String { rawValue }
+}
+
+/// Pet sex options
+enum PetSex: String, CaseIterable, Identifiable, Codable {
+    case male = "M"
+    case female = "F"
+    
+    var id: String { rawValue }
+}
+
+// MARK: - Pet Model
+
+/// Pet data model
+struct Pet: Identifiable, Hashable, Codable {
+    var id: UUID = UUID()
+    var name: String
+    var imageData: Data?
+    var sex: PetSex
+    var species: PetSpecies
+    var breed: String
+    var isSterilized: Bool
+    
+    // Computed property for SwiftUI Image
+    var image: Image? {
+        guard let imageData, let uiImage = UIImage(data: imageData) else { return nil }
+        return Image(uiImage: uiImage)
+    }
+    
+    mutating func setImage(_ uiImage: UIImage) {
+        self.imageData = uiImage.jpegData(compressionQuality: 0.7)
+    }
+}
+
+// MARK: - Pets Manager
+
+/// Manager class for handling pets collection using the new @Observable macro
+@Observable class PetManager {
+    var pets: [Pet] = []
+    
+    // MARK: - CRUD Operations
+    
+    func addPet(_ pet: Pet) {
+        pets.append(pet)
+    }
+    
+    func removePet(at indexSet: IndexSet) {
+        pets.remove(atOffsets: indexSet)
+    }
+    
+    func removePet(withID id: UUID) {
+        pets.removeAll { $0.id == id }
+    }
+    
+    func updatePet(_ updatedPet: Pet) {
+        guard let index = pets.firstIndex(where: { $0.id == updatedPet.id }) else { return }
+        pets[index] = updatedPet
+    }
+    
+    // MARK: - Filter Methods
+    
+    var dogs: [Pet] {
+        pets.filter { $0.species == .dog }
+    }
+    
+    var cats: [Pet] {
+        pets.filter { $0.species == .cat }
+    }
+    
+    var sterilizedPets: [Pet] {
+        pets.filter { $0.isSterilized }
+    }
+    
+    var nonSterilizedPets: [Pet] {
+        pets.filter { !$0.isSterilized }
+    }
+    
+    func getPets(ofSpecies species: PetSpecies) -> [Pet] {
+        pets.filter { $0.species == species }
+    }
+    
+    func getPets(ofSex sex: PetSex) -> [Pet] {
+        pets.filter { $0.sex == sex }
+    }
+}
