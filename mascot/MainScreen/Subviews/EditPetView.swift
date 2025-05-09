@@ -104,7 +104,7 @@ struct EditPetView: View {
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.white) // Match PetRegistrationView
+                        .foregroundColor(.white)
                         .padding(12)
                         .background(Circle().fill(Color.gray.opacity(0.3)))
                 }
@@ -113,7 +113,7 @@ struct EditPetView: View {
             }
         }
         .padding(.vertical, 15)
-        .background(Color.white) // Match PetRegistrationView
+        .background(Color.white)
     }
     
     // MARK: - Image Selection View
@@ -155,7 +155,7 @@ struct EditPetView: View {
     // MARK: - Form Fields View
     private var formFieldsView: some View {
         VStack(spacing: 20) {
-            // Name
+            
             VStack(alignment: .leading, spacing: 5) {
                 Text("Nombre")
                     .font(.headline)
@@ -210,7 +210,6 @@ struct EditPetView: View {
                 }
             }
             
-            // Breed
             VStack(alignment: .leading, spacing: 5) {
                 Text("Raza")
                     .font(.headline)
@@ -295,4 +294,24 @@ struct EditPetView: View {
         petManager.updatePet(updatedPet)
         dismiss()
     }
+}
+
+#Preview {
+    
+    let previewManager = PetManager()
+    
+    let samplePet = Pet(
+        name: "Luna",
+        sex: .female,
+        species: .cat,
+        breed: "Siamese",
+        isSterilized: true
+    )
+    
+    previewManager.addPet(samplePet)
+    
+    return EditPetView(
+        petManager: previewManager,
+        petToEdit: samplePet
+    )
 }

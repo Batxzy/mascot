@@ -30,11 +30,15 @@ struct PetCardView: View {
         } label: {
             cardContentView
         }
-        .alert("Confirmar Eliminación", isPresented: $showingDeleteConfirmationAlert) {
+        .confirmationDialog(
+            "Confirmar Eliminación",
+            isPresented: $showingDeleteConfirmationAlert,
+            titleVisibility: .visible
+        ) {
             Button("Eliminar \(pet.name)", role: .destructive) {
                 onDeleteAction()
-                
             }
+            
             Button("Cancelar", role: .cancel) {
             }
         } message: {
@@ -53,14 +57,15 @@ struct PetCardView: View {
                         petImage
                             .resizable()
                             .scaledToFill()
-                            .frame(width: 50, height: 50)
+                            .frame(width: 60, height: 60)
                             .clipShape(Circle())
                     } else {
-                        Image(systemName: pet.species == .cat ? "cat.fill" : "dog.fill")
+                        Image(
+                            pet.species == .cat ? "Gato" : "perro")
                             .resizable()
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 60, height: 60)
                     }
                 }
                 
@@ -96,3 +101,4 @@ struct PetCardView: View {
             .contentShape(Rectangle())
         }
     }
+

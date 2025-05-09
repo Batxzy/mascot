@@ -1,5 +1,5 @@
 //
-//  editMascotView.swift
+//  PetRegistrationView.swift
 //  mascot
 //
 //  PetCare: Integrantes: Salvador Hernández Cuevas ,Ibarra Bonilla (Tláloc)
@@ -155,7 +155,7 @@ struct PetRegistrationView: View {
     
     private var formFieldsView: some View {
         VStack(spacing: 20) {
-            // Name
+
             VStack(alignment: .leading, spacing: 5) {
                 Text("Nombre")
                     .font(.headline)

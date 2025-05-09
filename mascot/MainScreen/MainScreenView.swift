@@ -111,7 +111,7 @@ struct MainScreenView: View {
                                .transition(.opacity.combined(with: .move(edge: .bottom)))
                            }
                        }
-                       .padding(15)
+                       .padding(24)
                        .animation(.spring(.smooth), value: petManager.pets)
                    }
                    .scrollIndicators(.hidden)
