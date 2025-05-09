@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct PetEmergency: Identifiable {
     let id = UUID()
     let title: String
@@ -24,6 +22,7 @@ struct PetEmergency: Identifiable {
         self.iconBackgroundColor = iconBackgroundColor
         self.detailedDescription = detailedDescription
     }
+//MARK: - Data
     static let Data = [
         PetEmergency(
             title: "Envenenamiento",
@@ -56,12 +55,14 @@ struct PetEmergency: Identifiable {
     ]
 }
 
+//MARK: - main emergency view
 struct EmergencyGuideView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedEmergency: PetEmergency?
     
     let emergencies = PetEmergency.Data
     
+//MARK: - body
     var body: some View {
         VStack(spacing: 0) {
 
@@ -98,6 +99,7 @@ struct EmergencyGuideView: View {
     }
 }
 
+//MARK: - Subviews
 struct EmergencyCardView: View {
     let emergency: PetEmergency
     

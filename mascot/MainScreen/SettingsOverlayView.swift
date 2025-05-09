@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsOverlayView: View {
+    
     @Binding var isShowing: Bool
     @Binding var navigationPath: NavigationPath
     var userManager: UserManager
@@ -23,7 +24,7 @@ struct SettingsOverlayView: View {
         }
         return nil
     }
-    
+//MARK: - body
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
@@ -174,6 +175,7 @@ struct SettingsOverlayView: View {
     }
 }
 
+//MARK: - Extensiones
 extension View {
     @MainActor
     func asUIImage(size: CGSize) -> UIImage {

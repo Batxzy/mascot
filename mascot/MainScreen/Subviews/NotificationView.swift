@@ -12,6 +12,7 @@ struct NotificationsView: View {
     @AppStorage("notificationEnabled") private var notificationsEnabled = true
     @Namespace private var animation
     
+//MARK: - body
     var body: some View {
         VStack(spacing: 0) {
 
@@ -93,7 +94,8 @@ struct NotificationsView: View {
         .background(Color.white)
         .navigationBarHidden(true)
     }
-    
+
+//MARK: - views
     private var headerView: some View {
         ZStack {
             Text("Notificaciones")

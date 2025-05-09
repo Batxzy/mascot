@@ -13,7 +13,7 @@ struct MainScreenView: View {
     @State private var showAddPetSheet = false
     @State private var showSettingsOverlay = false
     @State private var navigationPath = NavigationPath()
-    
+//MARK: - Body
     var body: some View {
            NavigationStack(path: $navigationPath) {
                ZStack {
@@ -68,78 +68,79 @@ struct MainScreenView: View {
            .zIndex(2)
        }
 
-       private var contentAreaView: some View {
-           VStack(spacing: 0) {
-               VStack(spacing: 8) {
-                   Image("Simbolodeentrada")
-                       .resizable()
-                       .scaledToFit()
-                       .frame(width: 200, height: 200)
-                   
-                   if let user = userManager.currentUser {
-                       Text("¡Bienvenido, \(user.name)!")
-                           .font(.custom("Noteworthy-Bold", size: 32))
-                           .foregroundColor(.accent)
-                   } else {
-                       Text("¡Bienvenido!")
-                           .font(.custom("Noteworthy-Bold", size: 32))
-                           .foregroundColor(.accent)
-                   }
-               }
-               .padding(.top)
-
-               if petManager.pets.isEmpty {
-                   ContentUnavailableView {
-                       Label("No hay mascotas", systemImage: "pawprint")
-                   } description: {
-                       Text("Agrega una mascota usando el botón + en la esquina superior.")
-                   }
-                   .frame(maxWidth: .infinity, maxHeight: .infinity)
+//MARK: - views
+    private var contentAreaView: some View {
+       VStack(spacing: 0) {
+           VStack(spacing: 8) {
+               Image("Simbolodeentrada")
+                   .resizable()
+                   .scaledToFit()
+                   .frame(width: 200, height: 200)
+               
+               if let user = userManager.currentUser {
+                   Text("¡Bienvenido, \(user.name)!")
+                       .font(.custom("Noteworthy-Bold", size: 32))
+                       .foregroundColor(.accent)
                } else {
-                   ScrollView {
-                       LazyVStack(spacing: 16) {
-                           ForEach(petManager.pets) { pet in
-                               PetCardView(
-                                   pet: pet,
-                                   onDeleteAction: {
-                                       petManager.removePet(withID: pet.id)
-                                   },
-                                   onEditAction: {
-                                       navigationPath.append(pet)
-                                   }
-                               )
-                               .transition(.opacity.combined(with: .move(edge: .bottom)))
-                           }
-                       }
-                       .padding(24)
-                       .animation(.spring(.smooth), value: petManager.pets)
-                   }
-                   .scrollIndicators(.hidden)
+                   Text("¡Bienvenido!")
+                       .font(.custom("Noteworthy-Bold", size: 32))
+                       .foregroundColor(.accent)
                }
-               Spacer()
            }
-           .background(Color.white)
-       }
+           .padding(.top)
 
-       private var settingsOverlayLayer: some View {
-           SettingsOverlayView(
-               isShowing: $showSettingsOverlay,
-               navigationPath: $navigationPath,
-               userManager: userManager
-           )
-       }
-
-       @ViewBuilder
-       private func navigationDestinationView(for destination: String) -> some View {
-           switch destination {
-           case "profile":
-               EditProfileView(userManager: userManager)
-           case "notifications":
-               NotificationsView()
-           default:
-               Text("Destino desconocido: \(destination)")
+           if petManager.pets.isEmpty {
+               ContentUnavailableView {
+                   Label("No hay mascotas", systemImage: "pawprint")
+               } description: {
+                   Text("Agrega una mascota usando el botón + en la esquina superior.")
+               }
+               .frame(maxWidth: .infinity, maxHeight: .infinity)
+           } else {
+               ScrollView {
+                   LazyVStack(spacing: 16) {
+                       ForEach(petManager.pets) { pet in
+                           PetCardView(
+                               pet: pet,
+                               onDeleteAction: {
+                                   petManager.removePet(withID: pet.id)
+                               },
+                               onEditAction: {
+                                   navigationPath.append(pet)
+                               }
+                           )
+                           .transition(.opacity.combined(with: .move(edge: .bottom)))
+                       }
+                   }
+                   .padding(24)
+                   .animation(.spring(.smooth), value: petManager.pets)
+               }
+               .scrollIndicators(.hidden)
            }
+           Spacer()
        }
+       .background(Color.white)
+    }
+
+    private var settingsOverlayLayer: some View {
+       SettingsOverlayView(
+           isShowing: $showSettingsOverlay,
+           navigationPath: $navigationPath,
+           userManager: userManager
+       )
+    }
+
+    @ViewBuilder
+    private func navigationDestinationView(for destination: String) -> some View {
+       switch destination {
+       case "profile":
+           EditProfileView(userManager: userManager)
+       case "notifications":
+           NotificationsView()
+       default:
+           Text("Destino desconocido: \(destination)")
+       }
+    }
    }
 
 struct RadioButtonGroup: View {

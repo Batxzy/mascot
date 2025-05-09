@@ -10,15 +10,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>5</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>103</string>
+					<string>128</string>
 					<key>StartingColumnNumber</key>
-					<string>4</string>
+					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>81</string>
+					<string>127</string>
 					<key>Timestamp</key>
-					<string>768452012.035333</string>
+					<string>768487694.483531</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -34,37 +34,16 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>        
-            if let userImage = currentUser.image?.asUIImage() {
-                selectedImage = userImage
-            }
-        }
-    }
+				<string>   
+</string>
+				<key>leading</key>
+				<string>    }
     
-    // MARK: - Header View
+</string>
+				<key>trailing</key>
+				<string>    // MARK: - Header View
     private var headerView: some View {
         VStack {
-            ZStack {
-                Text("Ficha de perfil")
-                    .font(.custom("Noteworthy", size: 30))
-                    .foregroundColor(.accent)
-                    .frame(maxWidth: .infinity)
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
-                            .padding(12)
-                            .background(Circle().fill(Color.gray.opacity(0.3)))
-                    }
-     </string>
-				<key>leading</key>
-				<string>            phoneNumber = currentUser.phoneNumber
-            country = currentUser.country
-    </string>
-				<key>trailing</key>
-				<string>               .padding(.leading, 10)
-                    
-                    Spacer()
 </string>
 			</dict>
 			<key>type</key>
@@ -123,13 +102,13 @@
 					<key>EndingColumnNumber</key>
 					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>97</string>
+					<string>99</string>
 					<key>StartingColumnNumber</key>
 					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>96</string>
+					<string>98</string>
 					<key>Timestamp</key>
-					<string>768484509.101739</string>
+					<string>768487751.87161</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -148,8 +127,8 @@
 				<string>    private var headerView: some View {
 </string>
 				<key>leading</key>
-				<string>    }
-    
+				<string>
+//MARK: - views
 </string>
 				<key>trailing</key>
 				<string>        ZStack {

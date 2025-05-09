@@ -94,6 +94,7 @@ struct Pet: Identifiable, Hashable, Codable {
     }
 }
 
+//MARK: - user model
 
 enum Gender: String, CaseIterable, Identifiable {
     case female = "Femenino"
@@ -140,7 +141,6 @@ struct User: Identifiable {
     }
 }
 
-// User Manager
 @Observable class UserManager {
     var currentUser: User?
     

@@ -29,7 +29,61 @@ struct EditProfileView: View {
     
     @State private var showingValidationAlert: Bool = false
     @State private var errorMessage: String = ""
+//MARK: - Funciones
+    private func loadUserData() {
+        if let currentUser = userManager.currentUser {
+            name = currentUser.name
+            gender = currentUser.gender
+            birthDate = currentUser.birthDate
+            phoneNumber = currentUser.phoneNumber
+            country = currentUser.country
+            
+            if let userImage = currentUser.image?.asUIImage() {
+                selectedImage = userImage
+            }
+        }
+    }
     
+    func saveUserProfile() {
+
+        if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errorMessage = "El nombre es obligatorio"
+            showingValidationAlert = true
+            return
+        }
+        
+        if phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            errorMessage = "El número de teléfono es obligatorio"
+            showingValidationAlert = true
+            return
+        }
+        
+        if country.isEmpty {
+            errorMessage = "Selecciona un país"
+            showingValidationAlert = true
+            return
+        }
+        
+        var user = User(
+            name: name,
+            gender: gender,
+            birthDate: birthDate,
+            phoneNumber: phoneNumber,
+            country: country
+        )
+        
+        if let selectedImage = selectedImage {
+            user.setImage(selectedImage)
+        } else if let currentUser = userManager.currentUser, let userImage = currentUser.image?.asUIImage() {
+            user.setImage(userImage)
+        }
+        
+        userManager.saveUser(user)
+        
+        dismiss()
+    }
+    
+    //MARK: - body
     var body: some View {
         VStack(spacing: 0) {
             headerView
@@ -71,21 +125,7 @@ struct EditProfileView: View {
         }
     }
     
-    // MARK: - Load User Data
-    private func loadUserData() {
-        if let currentUser = userManager.currentUser {
-            name = currentUser.name
-            gender = currentUser.gender
-            birthDate = currentUser.birthDate
-            phoneNumber = currentUser.phoneNumber
-            country = currentUser.country
-            
-            if let userImage = currentUser.image?.asUIImage() {
-                selectedImage = userImage
-            }
-        }
-    }
-    
+   
     // MARK: - Header View
     private var headerView: some View {
         VStack {
@@ -110,7 +150,7 @@ struct EditProfileView: View {
         .padding(.vertical, 15)
     }
     
-    // MARK: - Profile Image View
+    // MARK: - Profile Image
     private var profileImageView: some View {
         VStack {
             ZStack {
@@ -146,7 +186,7 @@ struct EditProfileView: View {
         }
     }
     
-    // MARK: - Form Fields View
+    // MARK: - Form
     private var formFieldsView: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
@@ -222,7 +262,7 @@ struct EditProfileView: View {
         }
     }
     
-    // MARK: - Country Picker Sheet
+    // MARK: - Country Picker
     private var countryPickerSheet: some View {
         NavigationStack {
             List {
@@ -248,7 +288,7 @@ struct EditProfileView: View {
         .presentationDetents([.medium])
     }
     
-    // MARK: - Save Button
+    // MARK: - Save
     private var saveButton: some View {
         Button(action: saveUserProfile) {
             Text("Guardar")
@@ -282,45 +322,7 @@ struct EditProfileView: View {
         }
     }
     
-    // MARK: - Save Action
-    func saveUserProfile() {
-
-        if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            errorMessage = "El nombre es obligatorio"
-            showingValidationAlert = true
-            return
-        }
-        
-        if phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            errorMessage = "El número de teléfono es obligatorio"
-            showingValidationAlert = true
-            return
-        }
-        
-        if country.isEmpty {
-            errorMessage = "Selecciona un país"
-            showingValidationAlert = true
-            return
-        }
-        
-        var user = User(
-            name: name,
-            gender: gender,
-            birthDate: birthDate,
-            phoneNumber: phoneNumber,
-            country: country
-        )
-        
-        if let selectedImage = selectedImage {
-            user.setImage(selectedImage)
-        } else if let currentUser = userManager.currentUser, let userImage = currentUser.image?.asUIImage() {
-            user.setImage(userImage)
-        }
-        
-        userManager.saveUser(user)
-        
-        dismiss()
-    }
+    
 }
 // MARK: - Preview
 #Preview {

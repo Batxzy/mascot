@@ -12,7 +12,8 @@ struct ContentView: View {
     @State private var petManager = PetManager()
     @State private var userManager = UserManager()
     @State private var navigateToPetRegistration = false
-    
+
+    //MARK: - body
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,6 +36,7 @@ struct ContentView: View {
     }
 }
 
+//MARK: - SubViews
 struct TabContent: View {
     let selectedTab: Int
     let petManager: PetManager

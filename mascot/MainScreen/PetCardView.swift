@@ -13,7 +13,7 @@ struct PetCardView: View {
     @State private var showingDeleteConfirmationAlert = false
     var onDeleteAction: () -> Void
     var onEditAction: () -> Void
-    
+//MARK: - body
     var body: some View {
         Menu {
             Button {
@@ -45,7 +45,7 @@ struct PetCardView: View {
             Text("¿Estás seguro de que quieres eliminar a \(pet.name)? Esta acción no se puede deshacer.")
         }
     }
-    
+ //MARK: - views
     private var cardContentView: some View {
             HStack(spacing: 15) {
                 ZStack {

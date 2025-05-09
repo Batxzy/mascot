@@ -9,9 +9,6 @@
 import SwiftUI
 import PhotosUI
 
-import SwiftUI
-import PhotosUI
-
 struct EditPetView: View {
     @Environment(\.dismiss) private var dismiss
     var petManager: PetManager
@@ -46,7 +43,7 @@ struct EditPetView: View {
             _selectedImage = State(initialValue: uiImage)
         }
     }
-    
+//MARK: - Body
     var body: some View {
         ZStack {
             Color.gray.opacity(0.1).ignoresSafeArea()
@@ -60,7 +57,7 @@ struct EditPetView: View {
                         formFieldsView
                         
                         Button(action: saveChanges) {
-                            Text("Guardar Cambios")
+                            Text("Guardar")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -93,7 +90,7 @@ struct EditPetView: View {
         }
     }
 
-    // MARK: - Header View
+    // MARK: - Header
     private var headerView: some View {
         ZStack {
             Text("Editar Mascota")
@@ -116,7 +113,7 @@ struct EditPetView: View {
         .background(Color.white)
     }
     
-    // MARK: - Image Selection View
+    // MARK: - Image Selection
     private var imageSelectionView: some View {
         VStack {
             ZStack {
@@ -152,7 +149,7 @@ struct EditPetView: View {
         }
     }
     
-    // MARK: - Form Fields View
+    // MARK: - Form
     private var formFieldsView: some View {
         VStack(spacing: 20) {
             
@@ -184,6 +181,7 @@ struct EditPetView: View {
                     Spacer()
                 }
             }
+            
             
             VStack(alignment: .leading, spacing: 5) {
                 Text("Especie")
@@ -241,7 +239,7 @@ struct EditPetView: View {
         }
     }
     
-    // MARK: - Helper View
+    // MARK: - Helper views
     private func radioButton(isSelected: Bool, label: String, symbol: String? = nil, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 10) {

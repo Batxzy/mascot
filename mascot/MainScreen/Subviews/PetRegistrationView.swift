@@ -89,7 +89,7 @@ struct PetRegistrationView: View {
     }
     
     
-    // MARK: - Header View
+    // MARK: - Header
     
     private var headerView: some View {
         ZStack {
@@ -114,7 +114,7 @@ struct PetRegistrationView: View {
         .background(Color.white)
     }
     
-    // MARK: - Image Selection View
+    // MARK: - Image Selection
     
     private var imageSelectionView: some View {
         VStack {
@@ -151,7 +151,7 @@ struct PetRegistrationView: View {
         }
     }
     
-    // MARK: - Form Fields View
+    // MARK: - Form
     
     private var formFieldsView: some View {
         VStack(spacing: 20) {
