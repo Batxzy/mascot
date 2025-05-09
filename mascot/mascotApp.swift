@@ -2,7 +2,7 @@
 //  mascotApp.swift
 //  mascot
 //
-//  Created by Jose julian Lopez on 07/05/25.
+//  PetCare: Integrantes: Salvador Hernández Cuevas ,Ibarra Bonilla (Tláloc)
 //
 
 import SwiftUI

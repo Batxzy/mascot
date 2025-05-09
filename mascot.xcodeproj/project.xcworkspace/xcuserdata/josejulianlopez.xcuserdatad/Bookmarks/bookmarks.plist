@@ -34,7 +34,14 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>// MARK: - Header View
+				<string>        
+            if let userImage = currentUser.image?.asUIImage() {
+                selectedImage = userImage
+            }
+        }
+    }
+    
+    // MARK: - Header View
     private var headerView: some View {
         VStack {
             ZStack {
@@ -49,22 +56,15 @@
                             .padding(12)
                             .background(Circle().fill(Color.gray.opacity(0.3)))
                     }
-                    .padding(.leading, 10)
-                    
-                    Spacer()
-                }
-            }
-        }
-        .padding(.vertical, 15)
-    }</string>
+     </string>
 				<key>leading</key>
-				<string>    }
-    
+				<string>            phoneNumber = currentUser.phoneNumber
+            country = currentUser.country
     </string>
 				<key>trailing</key>
-				<string>
-    
-    // MARK: - Profile Image View
+				<string>               .padding(.leading, 10)
+                    
+                    Spacer()
 </string>
 			</dict>
 			<key>type</key>
@@ -84,7 +84,7 @@
 					<key>StartingLineNumber</key>
 					<string>93</string>
 					<key>Timestamp</key>
-					<string>768454206.918995</string>
+					<string>768484559.147298</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -129,7 +129,7 @@
 					<key>StartingLineNumber</key>
 					<string>96</string>
 					<key>Timestamp</key>
-					<string>768452703.642585</string>
+					<string>768484509.101739</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>

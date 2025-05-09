@@ -1,3 +1,10 @@
+//
+//  editProfileView.swift
+//  mascot
+//
+//  PetCare: Integrantes: Salvador Hernández Cuevas ,Ibarra Bonilla (Tláloc)
+//
+
 import SwiftUI
 import PhotosUI
 

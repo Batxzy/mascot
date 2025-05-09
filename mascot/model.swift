@@ -2,23 +2,19 @@
 //  model.swift
 //  mascot
 //
-//  Created by Jose julian Lopez on 07/05/25.
+//  PetCare: Integrantes: Salvador Hernández Cuevas ,Ibarra Bonilla (Tláloc)
 //
 
 import SwiftUI
 
 // MARK: - Enums
 
-/// Pet species options - limited to dog/cat with ability to expand
 enum PetSpecies: String, CaseIterable, Identifiable, Codable {
     case dog = "Perro"
-    case cat = "Gato"
-    // Add more as needed
-    
+    case cat = "Gato"    
     var id: String { rawValue }
 }
 
-/// Pet sex options
 enum PetSex: String, CaseIterable, Identifiable, Codable {
     case male = "M"
     case female = "F"
@@ -115,7 +111,6 @@ enum Gender: String, CaseIterable, Identifiable {
     }
 }
 
-// User model with public initializer
 struct User: Identifiable {
     var id = UUID()
     var name: String
@@ -125,7 +120,6 @@ struct User: Identifiable {
     var country: String
     private var uiImage: UIImage?
     
-    // Explicitly public initializer
     init(name: String, gender: Gender, birthDate: Date, phoneNumber: String, country: String) {
         self.name = name
         self.gender = gender
