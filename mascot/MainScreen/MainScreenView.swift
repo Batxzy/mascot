@@ -100,7 +100,7 @@ struct MainScreenView: View {
                ContentUnavailableView {
                    Label("No hay mascotas", systemImage: "pawprint")
                } description: {
-                   Text("Agrega una mascota usando el botón + en la esquina superior.")
+                   Text("Agrega una mascota usando el botón +")
                }
                .frame(maxWidth: .infinity, maxHeight: .infinity)
            } else {

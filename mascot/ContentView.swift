@@ -96,7 +96,7 @@ struct CustomTabBar: View {
                 selectedTab = 1
             }
         }
-        .frame(height: 70)
+        .frame(height: 80)
         .background(
             Rectangle()
                 .fill(Color(.systemBackground))
