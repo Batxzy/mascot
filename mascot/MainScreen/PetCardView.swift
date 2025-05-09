@@ -83,7 +83,7 @@ struct PetCardView: View {
                         Spacer()
                     }
                     HStack {
-                        Text("Género: ").bold()
+                        Text("Sexo: ").bold()
                         Text(pet.sex == .male ? "♂" : "♀")
                             .foregroundColor(.primary)
                         Spacer()
