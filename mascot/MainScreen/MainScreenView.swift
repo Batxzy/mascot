@@ -19,15 +19,14 @@ struct MainScreenView: View {
                     // Custom top bar
                     HStack {
                         Button(action: {
-                            // Always wrap in withAnimation to ensure consistent behavior
                             withAnimation(.spring(.smooth)) {
                                 showSettingsOverlay.toggle()
                             }
-                        }) {
+                        }
+                        ){
                             Image(systemName: "gearshape.fill")
                                 .foregroundStyle(.gray.opacity(0.7))
                                 .font(.system(size: 35))
-                                .symbolEffect(.pulse, options: .repeating.speed(0.5), isActive: showSettingsOverlay)
                         }
                         .padding(.leading, 12)
 
@@ -48,6 +47,7 @@ struct MainScreenView: View {
 
                     // Main content container
                     VStack(spacing: 0) {
+                        
                         // Logo and welcome area
                         VStack(spacing: 8) {
                             Image("Simbolodeentrada")
@@ -120,7 +120,7 @@ struct SettingsOverlayView: View {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                        withAnimation(.smooth()) {
                             isShowing = false
                         }
                     }

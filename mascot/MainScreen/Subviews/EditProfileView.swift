@@ -9,8 +9,6 @@ import SwiftUI
 import PhotosUI
 
 
-
-
 struct UserProfileView: View {
     @Environment(\.dismiss) private var dismiss
     private var userManager = UserManager()
