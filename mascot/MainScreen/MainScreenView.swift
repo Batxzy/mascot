@@ -48,24 +48,30 @@ struct MainScreenView: View {
        }
 
        private var topBarView: some View {
-           HStack {
-               Button(action: {
-                   withAnimation(.spring(.smooth)) {
-                       showSettingsOverlay.toggle()
+           ZStack {
+               Image("Logo")
+                   .resizable()
+                   .scaledToFit()
+                   .frame(height: 52)
+               HStack {
+                   Button(action: {
+                       withAnimation(.spring(.smooth)) {
+                           showSettingsOverlay.toggle()
+                       }
+                   }) {
+                       Image(systemName: "gearshape.fill")
+                           .foregroundStyle(.gray.opacity(0.7))
+                           .font(.system(size: 35))
                    }
-               }) {
-                   Image(systemName: "gearshape.fill")
-                       .foregroundStyle(.gray.opacity(0.7))
-                       .font(.system(size: 35))
+                   .padding(.leading, 12)
+                   
+                   Spacer()
+                   
                }
-               .padding(.leading, 12)
-               
-               Spacer()
-                
+               .padding(.horizontal, 8)
+               .padding(.vertical, 12)
+               .zIndex(2)
            }
-           .padding(.horizontal, 8)
-           .padding(.vertical, 12)
-           .zIndex(2)
        }
 
 //MARK: - views
