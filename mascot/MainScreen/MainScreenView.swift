@@ -10,107 +10,137 @@ import PhotosUI
 struct MainScreenView: View {
     var petManager: PetManager
     var userManager : UserManager
-    @State private var showAddPet = false
+    @State private var showAddPetSheet = false
     @State private var showSettingsOverlay = false
     @State private var navigationPath = NavigationPath()
     
     var body: some View {
-            NavigationStack(path: $navigationPath) {
-                ZStack {
-                    VStack(spacing: 0) {
-                        HStack {
-                            Button(action: {
-                                withAnimation(.spring(.smooth)) {
-                                    showSettingsOverlay.toggle()
-                                }
-                            }
-                            ){
-                                Image(systemName: "gearshape.fill")
-                                    .foregroundStyle(.gray.opacity(0.7))
-                                    .font(.system(size: 35))
-                            }
-                            .padding(.leading, 12)
+           NavigationStack(path: $navigationPath) {
+               ZStack {
+                   mainUILayer
+                       .zIndex(0)
 
-                            Spacer()
-                        }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 12)
-                        .zIndex(2)
+                   if showSettingsOverlay {
+                       settingsOverlayLayer
+                           .transition(.move(edge: .leading))
+                           .zIndex(10)
+                   }
+               }
+               .sheet(isPresented: $showAddPetSheet) {
+                   PetRegistrationView(petManager: petManager)
+                       .presentationDetents([.large])
+                       .presentationDragIndicator(.visible)
+               }
+               .navigationDestination(for: String.self) { destination in
+                   navigationDestinationView(for: destination)
+               }
+               .navigationDestination(for: Pet.self) { petToEdit in
+                   EditPetView(petManager: petManager, petToEdit: petToEdit)
+               }
+           }
+       }
 
-                        VStack(spacing: 0) {
-                            
-                            VStack(spacing: 8) {
-                                Image("Simbolodeentrada")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 235, height: 235)
+       private var mainUILayer: some View {
+           VStack(spacing: 0) {
+               topBarView
+               contentAreaView
+           }
+       }
 
-                                if let user = userManager.currentUser {
-                                    Text("¡Bienvenido, \(user.name)!")
-                                        .font(.custom("Noteworthy-Bold", size: 36))
-                                        .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
-                                } else {
-                                    Text("¡Bienvenido!")
-                                        .font(.custom("Noteworthy-Bold", size: 36))
-                                        .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
-                                }
-                            }
+       private var topBarView: some View {
+           HStack {
+               Button(action: {
+                   withAnimation(.spring(.smooth)) {
+                       showSettingsOverlay.toggle()
+                   }
+               }) {
+                   Image(systemName: "gearshape.fill")
+                       .foregroundStyle(.gray.opacity(0.7))
+                       .font(.system(size: 35))
+               }
+               .padding(.leading, 12)
+               
+               Spacer()
+                
+           }
+           .padding(.horizontal, 8)
+           .padding(.vertical, 12)
+           .zIndex(2)
+       }
 
-                            if petManager.pets.isEmpty {
-                                ContentUnavailableView {
-                                    Label("No hay mascotas", systemImage: "pawprint")
-                                } description: {
-                                    Text("Agrega una mascota usando el botón +")
-                                }
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            } else {
-                                ScrollView {
-                                    LazyVStack(spacing: 16) {
-                                        ForEach(petManager.pets) { pet in
-                                            PetCardView(pet: pet)
-                                                .transition(.opacity.combined(with: .move(edge: .bottom)))
-                                        }
-                                    }
-                                    .padding(15)
-                                    .animation(.spring(.smooth), value: petManager.pets)
-                                }
-                                .scrollIndicators(.hidden)
-                            }
+       private var contentAreaView: some View {
+           VStack(spacing: 0) {
+               VStack(spacing: 8) {
+                   Image("Simbolodeentrada")
+                       .resizable()
+                       .scaledToFit()
+                       .frame(width: 200, height: 200)
+                   
+                   if let user = userManager.currentUser {
+                       Text("¡Bienvenido, \(user.name)!")
+                           .font(.custom("Noteworthy-Bold", size: 32))
+                           .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
+                   } else {
+                       Text("¡Bienvenido!")
+                           .font(.custom("Noteworthy-Bold", size: 32))
+                           .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
+                   }
+               }
+               .padding(.top)
 
-                            Spacer()
-                        }
-                        .background(Color.white)
-                    }
-                    .zIndex(0)
+               if petManager.pets.isEmpty {
+                   ContentUnavailableView {
+                       Label("No hay mascotas", systemImage: "pawprint")
+                   } description: {
+                       Text("Agrega una mascota usando el botón + en la esquina superior.")
+                   }
+                   .frame(maxWidth: .infinity, maxHeight: .infinity)
+               } else {
+                   ScrollView {
+                       LazyVStack(spacing: 16) {
+                           ForEach(petManager.pets) { pet in
+                               PetCardView(
+                                   pet: pet,
+                                   onDeleteAction: {
+                                       petManager.removePet(withID: pet.id)
+                                   },
+                                   onEditAction: {
+                                       navigationPath.append(pet)
+                                   }
+                               )
+                               .transition(.opacity.combined(with: .move(edge: .bottom)))
+                           }
+                       }
+                       .padding(15)
+                       .animation(.spring(.smooth), value: petManager.pets)
+                   }
+                   .scrollIndicators(.hidden)
+               }
+               Spacer()
+           }
+           .background(Color.white)
+       }
 
-                    if showSettingsOverlay {
-                        SettingsOverlayView(
-                            isShowing: $showSettingsOverlay,
-                            navigationPath: $navigationPath,
-                            userManager: userManager
-                        )
-                        .transition(.move(edge: .leading))
-                        .zIndex(10)
-                    }
-                }
-                .sheet(isPresented: $showAddPet) {
-                    PetRegistrationView(petManager: petManager)
-                        .presentationDetents([.large])
-                        .presentationDragIndicator(.visible)
-                }
-                .navigationDestination(for: String.self) { destination in
-                    switch destination {
-                    case "profile":
-                        EditProfileView(userManager: userManager)
-                    case "notifications":
-                        NotificationsView()
-                    default:
-                        Text("Destino desconocido")
-                    }
-                }
-            }
-        }
-    }
+       private var settingsOverlayLayer: some View {
+           SettingsOverlayView(
+               isShowing: $showSettingsOverlay,
+               navigationPath: $navigationPath,
+               userManager: userManager
+           )
+       }
+
+       @ViewBuilder
+       private func navigationDestinationView(for destination: String) -> some View {
+           switch destination {
+           case "profile":
+               EditProfileView(userManager: userManager)
+           case "notifications":
+               NotificationsView()
+           default:
+               Text("Destino desconocido: \(destination)")
+           }
+       }
+   }
 
 struct RadioButtonGroup: View {
     let options: [String]
@@ -189,148 +219,6 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 }
 
-struct PetCardView: View {
-    let pet: Pet
-    @State private var isPressedForTapEffect = false
-    @State private var showActionButtons = false
-    @State private var showingDeleteConfirmationAlert = false
-
-    var onDeleteAction: () -> Void = { print("Default delete action triggered") }
-    var onEditAction: () -> Void = { print("Default edit action triggered") }
-    
-    var body: some View {
-        ZStack {
-            HStack(spacing: 15) {
-                ZStack {
-                    Circle()
-                        .fill(Color(red: 1, green: 0.4, blue: 0.4))
-                        .frame(width: 60, height: 60)
-                    
-                    if let petImage = pet.image {                         petImage
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                    } else {
-                        Image(systemName: pet.species == .cat ? "cat.fill" : "dog.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(width: 30, height: 30)
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text("Nombre: ").bold() + Text(pet.name)
-                        Spacer()
-                    }
-                    HStack {
-                        Text("Mascota: ").bold() + Text(pet.species.rawValue)
-                        Spacer()
-                    }
-                    HStack {
-                        Text("Raza: ").bold() + Text(pet.breed)
-                        Spacer()
-                    }
-                    HStack {
-                        Text("Género: ").bold()
-                        Text(pet.sex == .male ? "♂" : "♀")
-                            .foregroundColor(pet.sex == .male ? .blue : .pink)
-                        Spacer()
-                    }
-                }
-                .font(.system(size: 14))
-            }
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.ultraThinMaterial)
-                    .shadow(radius: isPressedForTapEffect ? 1 : 2)
-            }
-            .scaleEffect(isPressedForTapEffect ? 0.98 : 1.0)
-            .allowsHitTesting(!showActionButtons)
-            .contentShape(Rectangle())
-            .onLongPressGesture(minimumDuration: 0.5, pressing: { pressing in
-                withAnimation(.spring(duration: 0.2)) {
-                    isPressedForTapEffect = pressing
-                }
-            }) {
-                withAnimation(.spring()) {
-                    showActionButtons = true
-                }
-            }
-
-            // Action Buttons Overlay
-            if showActionButtons {
-                Color.black.opacity(0.001)
-                    .edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        withAnimation(.spring()) {
-                            showActionButtons = false
-                        }
-                    }
-                
-                
-                HStack(spacing: 25) {
-                    Button {
-                        onEditAction()
-                        withAnimation(.spring()) {
-                            showActionButtons = false
-                        }
-                    } label: {
-                        VStack {
-                            Image(systemName: "pencil.circle.fill")
-                                .font(.title)
-                            Text("Edit")
-                                .font(.caption)
-                        }
-                        .padding(10)
-                        .frame(width: 70, height: 70)
-                        .background(.blue.opacity(0.9))
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
-                        .shadow(radius: 3)
-                    }
-                    
-                    Button {
-                        showingDeleteConfirmationAlert = true
-                    } label: {
-                        VStack {
-                            Image(systemName: "trash.circle.fill")
-                                .font(.title)
-                            Text("Delete")
-                                .font(.caption)
-                        }
-                        .padding(10)
-                        .frame(width: 70, height: 70)
-                        .background(.red.opacity(0.9))
-                        .foregroundColor(.white)
-                        .clipShape(Circle())
-                        .shadow(radius: 3)
-                    }
-                }
-                .transition(.scale.combined(with: .opacity))
-            }
-        }
-        .alert("Confirm Deletion", isPresented: $showingDeleteConfirmationAlert) {
-            Button("Delete \(pet.name)", role: .destructive) {
-                onDeleteAction()
-                withAnimation(.spring()) {
-                    showActionButtons = false
-                }
-            }
-            Button("Cancel", role: .cancel) {
-                withAnimation(.spring()) {
-                    showActionButtons = false
-                }
-            }
-        } message: {
-            Text("Are you sure you want to delete \(pet.name)? This action cannot be undone.")
-        }
-    }
-}
 
 #Preview {
     MainScreenView(petManager: PetManager(), userManager: UserManager())
