@@ -81,7 +81,7 @@ struct SettingsOverlayView: View {
                         .padding(.bottom, 20)
                     }
                     .frame(maxWidth: .infinity)
-                    .background(Color(red: 1, green: 0.4, blue: 0.4))
+                    .background(.accent)
                     
                     VStack(spacing: 0) {
                         if let user = userManager.currentUser {

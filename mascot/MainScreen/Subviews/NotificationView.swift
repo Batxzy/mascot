@@ -96,13 +96,11 @@ struct NotificationsView: View {
     
     private var headerView: some View {
         ZStack {
-            // Title in the center
             Text("Notificaciones")
                 .font(.custom("Noteworthy-Bold", size: 28))
-                .foregroundColor(Color.red.opacity(0.7))
+                .foregroundColor(.accent)
                 .frame(maxWidth: .infinity)
             
-            // Back button aligned to the leading edge
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")

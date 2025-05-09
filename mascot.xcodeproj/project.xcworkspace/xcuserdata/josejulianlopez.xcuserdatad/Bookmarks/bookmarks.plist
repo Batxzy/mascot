@@ -153,8 +153,8 @@
 </string>
 				<key>trailing</key>
 				<string>        ZStack {
-            // Title in the center
             Text("Notificaciones")
+                .font(.custom("Noteworthy-Bold", size: 28))
 </string>
 			</dict>
 			<key>type</key>

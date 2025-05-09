@@ -79,11 +79,11 @@ struct MainScreenView: View {
                    if let user = userManager.currentUser {
                        Text("¡Bienvenido, \(user.name)!")
                            .font(.custom("Noteworthy-Bold", size: 32))
-                           .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
+                           .foregroundColor(.accent)
                    } else {
                        Text("¡Bienvenido!")
                            .font(.custom("Noteworthy-Bold", size: 32))
-                           .foregroundColor(Color(red: 1, green: 0.4, blue: 0.4))
+                           .foregroundColor(.accent)
                    }
                }
                .padding(.top)

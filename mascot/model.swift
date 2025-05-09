@@ -28,7 +28,6 @@ enum PetSex: String, CaseIterable, Identifiable, Codable {
 
 // MARK: - Pet Model
 
-/// Pet data model
 struct Pet: Identifiable, Hashable, Codable {
     var id: UUID = UUID()
     var name: String
@@ -38,7 +37,6 @@ struct Pet: Identifiable, Hashable, Codable {
     var breed: String
     var isSterilized: Bool
     
-    // Computed property for SwiftUI Image
     var image: Image? {
         guard let imageData, let uiImage = UIImage(data: imageData) else { return nil }
         return Image(uiImage: uiImage)
@@ -51,11 +49,10 @@ struct Pet: Identifiable, Hashable, Codable {
 
 // MARK: - Pets Manager
 
-/// Manager class for handling pets collection using the new @Observable macro
 @Observable class PetManager {
     var pets: [Pet] = []
     
-    // MARK: - CRUD Operations
+    // MARK: - Funciones
     
     func addPet(_ pet: Pet) {
         pets.append(pet)
@@ -74,7 +71,7 @@ struct Pet: Identifiable, Hashable, Codable {
         pets[index] = updatedPet
     }
     
-    // MARK: - Filter Methods
+    // MARK: - Computed properties
     
     var dogs: [Pet] {
         pets.filter { $0.species == .dog }
@@ -155,6 +152,5 @@ struct User: Identifiable {
     
     func saveUser(_ user: User) {
         self.currentUser = user
-        // Here you would typically save to UserDefaults, CoreData, or backend
     }
 }

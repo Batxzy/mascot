@@ -95,7 +95,7 @@ struct PetRegistrationView: View {
         ZStack {
             Text("Registro de Mascotas")
                 .font(.custom("Noteworthy", size: 28))
-                .foregroundColor(Color.red.opacity(0.7))
+                .foregroundColor(.accent)
                 .frame(maxWidth: .infinity)
             
             HStack {
@@ -143,7 +143,7 @@ struct PetRegistrationView: View {
                     Image(systemName: "camera.fill")
                         .foregroundColor(.white)
                         .padding(10)
-                        .background(Circle().fill(Color.red.opacity(0.7)))
+                        .background(Circle().fill(.accent))
                 }
                 .offset(x: 40, y: 40)
             }
@@ -224,7 +224,7 @@ struct PetRegistrationView: View {
                             .foregroundColor(.white)
                     }
                     .padding()
-                    .background(Color.red.opacity(0.7))
+                    .background(.accent)
                     .cornerRadius(10)
                     .foregroundColor(.white)
                 }
@@ -273,7 +273,7 @@ struct PetRegistrationView: View {
                     .stroke(Color.gray, lineWidth: 1)
                     .background(
                         Circle()
-                            .fill(isSelected ? Color.red.opacity(0.7) : Color.clear)
+                            .fill(isSelected ? .accent : Color.clear)
                             .padding(4)
                     )
                     .frame(width: 24, height: 24)
@@ -281,7 +281,7 @@ struct PetRegistrationView: View {
                 if let symbol = symbol {
                     Text(symbol)
                         .font(.title3)
-                        .foregroundColor(.pink.opacity(0.8))
+                        .foregroundColor(.accent)
                 } else {
                     Text(label)
                         .foregroundColor(.primary)

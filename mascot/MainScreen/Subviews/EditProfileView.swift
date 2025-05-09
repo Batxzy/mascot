@@ -260,17 +260,17 @@ struct EditProfileView: View {
         Button(action: action) {
             VStack {
                 Circle()
-                    .stroke(isSelected ? Color.pink : Color.gray, lineWidth: 2)
+                    .stroke(isSelected ? Color.accent : Color.gray, lineWidth: 2)
                     .background(
                         Circle()
-                            .fill(isSelected ? Color.pink.opacity(0.7) : Color.clear)
+                            .fill(isSelected ? .accent : Color.clear)
                             .padding(4)
                     )
                     .frame(width: 30, height: 50)
                 
                 Text(symbol)
                     .font(.title)
-                    .foregroundColor(isSelected ? .pink : .gray)
+                    .foregroundColor(isSelected ? .accent : .gray)
             }
         }
     }
