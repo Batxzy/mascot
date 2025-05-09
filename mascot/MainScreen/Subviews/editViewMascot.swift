@@ -110,7 +110,7 @@ struct PetRegistrationView: View {
                 Spacer()
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 15)
         .background(Color.white)
     }
     
@@ -324,8 +324,6 @@ struct PetRegistrationView: View {
 }
 // MARK: - Preview
 
-struct PetRegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        PetRegistrationView(petManager: PetManager())
-    }
+#Preview {
+    PetRegistrationView(petManager: PetManager())
 }

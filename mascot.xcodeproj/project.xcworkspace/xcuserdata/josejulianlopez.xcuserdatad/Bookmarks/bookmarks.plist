@@ -119,15 +119,17 @@
                 Spacer()
             }
         }
-     </string>
+        .padding(.vertical, 15)
+        .background(Color.white)
+    }</string>
 				<key>leading</key>
 				<string>    // MARK: - Header View
     
     </string>
 				<key>trailing</key>
-				<string>   .padding(.vertical, 10)
-        .background(Color.white)
-    }
+				<string>
+    
+    // MARK: - Image Selection View
 </string>
 			</dict>
 			<key>type</key>

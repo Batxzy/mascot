@@ -13,7 +13,7 @@ struct PetEmergency: Identifiable {
     let id = UUID()
     let title: String
     let previewText: String
-    let icon: String // System name or custom image
+    let icon: String
     let iconBackgroundColor: Color
     let detailedDescription: String
     
@@ -64,7 +64,7 @@ struct EmergencyGuideView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Custom header
+
             headerView
             
             ScrollView {
@@ -88,7 +88,6 @@ struct EmergencyGuideView: View {
     
     private var headerView: some View {
         ZStack {
-            // Title in the center
             Text("Guía de emergencia")
                 .font(.custom("Noteworthy-Bold", size: 32))
                 .foregroundColor(Color.red.opacity(0.7))
@@ -104,7 +103,6 @@ struct EmergencyCardView: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            // Icon
             Circle()
                 .fill(emergency.iconBackgroundColor)
                 .frame(width: 70, height: 70)
@@ -116,7 +114,6 @@ struct EmergencyCardView: View {
                         .foregroundColor(.white)
                 )
             
-            // Text
             VStack(alignment: .leading, spacing: 4) {
                 Text(emergency.title)
                     .font(.headline)
@@ -144,7 +141,6 @@ struct EmergencyDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header
             ZStack {
                 Text(emergency.title)
                     .font(.title2.bold())
@@ -168,7 +164,6 @@ struct EmergencyDetailView: View {
             
             ScrollView {
                 VStack(spacing: 24) {
-                    // Icon
                     Circle()
                         .fill(emergency.iconBackgroundColor)
                         .frame(width: 120, height: 120)
@@ -181,7 +176,6 @@ struct EmergencyDetailView: View {
                         )
                         .padding(.top)
                     
-                    // Detailed description
                     Text(emergency.detailedDescription)
                         .font(.body)
                         .foregroundColor(.primary)

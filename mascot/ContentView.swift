@@ -16,14 +16,11 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Main content area
                 VStack(spacing: 0) {
-                    // Content based on selected tab
                     TabContent(selectedTab: selectedTab,
                                petManager: petManager,
                                userManager: userManager)
                     
-                    // Custom tab bar
                     CustomTabBar(
                         selectedTab: $selectedTab,
                         navigateToPetRegistration: $navigateToPetRegistration
@@ -62,7 +59,6 @@ struct CustomTabBar: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            // Tab 1 - Home
             TabBarButton(
                 isSelected: selectedTab == 0,
                 icon: "house.fill",
@@ -72,7 +68,6 @@ struct CustomTabBar: View {
                 selectedTab = 0
             }
             
-            // Middle Add Pet Button
             ZStack {
                 Circle()
                     .fill(Color.white)
@@ -90,7 +85,6 @@ struct CustomTabBar: View {
             }
             .offset(y: -20)
             
-            // Tab 3 - Emergency Guide
             TabBarButton(
                 isSelected: selectedTab == 1,
                 icon: "cross.case.fill",

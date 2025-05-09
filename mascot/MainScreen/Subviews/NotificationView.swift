@@ -116,7 +116,7 @@ struct NotificationsView: View {
                 Spacer()
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 15)
         .background(Color.white)
     }
 }
