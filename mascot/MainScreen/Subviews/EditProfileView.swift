@@ -1,66 +1,53 @@
-//
-//  editView.swift
-//  mascot
-//
-//  Created by Jose julian Lopez on 07/05/25.
-//
-
 import SwiftUI
 import PhotosUI
 
 
-struct UserProfileView: View {
+struct EditProfileView: View {
     @Environment(\.dismiss) private var dismiss
-    private var userManager = UserManager()
+    var userManager: UserManager
     
-    // Form fields
     @State private var name: String = ""
     @State private var gender: Gender = .female
     @State private var birthDate: Date = Date()
     @State private var phoneNumber: String = ""
     @State private var country: String = ""
     
-    // Available countries (would typically come from an API)
     private let countries = ["México", "Estados Unidos", "España", "Argentina", "Colombia", "Chile", "Perú", "Brasil"]
+    
     @State private var showCountryPicker = false
     
-    // Image picker
     @State private var selectedImage: UIImage?
     @State private var showingImagePicker: Bool = false
     @State private var photoItem: PhotosPickerItem?
     
-    // Validation
     @State private var showingValidationAlert: Bool = false
     @State private var errorMessage: String = ""
     
     var body: some View {
+        VStack(spacing: 0) {
+            headerView
             
-            VStack(spacing: 0) {
-                // Header with back button
-                headerView
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // Profile image section
-                        profileImageView
-                        
-                        // Form fields
-                        formFieldsView
-                        
-                        // Save button
-                        saveButton
-                    }
-                    .padding(.horizontal, 32)
-                    .padding(.bottom, 40)
+            ScrollView {
+                VStack(spacing: 24) {
+                    profileImageView
+                    
+                    formFieldsView
+                    
+                    saveButton
                 }
+                .padding(.horizontal, 32)
+                .padding(.bottom, 40)
             }
-        
+        }
+        .navigationBarBackButtonHidden()
         .photosPicker(isPresented: $showingImagePicker, selection: $photoItem)
-        .onChange(of: photoItem) { oldValue, newValue in
-            Task {
-                if let data = try? await newValue?.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    selectedImage = image
+        .onChange(of: photoItem) { _, newValue in
+            if let newValue {
+                Task {
+                    if let data = try? await newValue.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data) {
+                        selectedImage = image
+                    }
                 }
             }
         }
@@ -72,19 +59,34 @@ struct UserProfileView: View {
         .sheet(isPresented: $showCountryPicker) {
             countryPickerSheet
         }
+        .onAppear {
+            loadUserData()
+        }
+    }
+    
+    // MARK: - Load User Data
+    private func loadUserData() {
+        if let currentUser = userManager.currentUser {
+            name = currentUser.name
+            gender = currentUser.gender
+            birthDate = currentUser.birthDate
+            phoneNumber = currentUser.phoneNumber
+            country = currentUser.country
+            
+            if let userImage = currentUser.image?.asUIImage() {
+                selectedImage = userImage
+            }
+        }
     }
     
     // MARK: - Header View
     private var headerView: some View {
         VStack {
             ZStack {
-                // Title in the center
                 Text("Ficha de perfil")
                     .font(.custom("Noteworthy", size: 30))
-                    .foregroundColor(Color.pink)
+                    .foregroundColor(.accent)
                     .frame(maxWidth: .infinity)
-                
-                // Back button aligned to the leading edge
                 HStack {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
@@ -140,7 +142,6 @@ struct UserProfileView: View {
     // MARK: - Form Fields View
     private var formFieldsView: some View {
         VStack(spacing: 20) {
-            // Name field
             VStack(alignment: .leading, spacing: 8) {
                 Text("Nombre")
                     .font(.headline)
@@ -166,7 +167,6 @@ struct UserProfileView: View {
                 }
             }
             
-            // Birth date
             VStack(alignment: .leading, spacing: 8) {
                 Text("Fecha de nacimiento")
                     .font(.headline)
@@ -180,7 +180,6 @@ struct UserProfileView: View {
                     .cornerRadius(10)
             }
             
-            // Phone number
             VStack(alignment: .leading, spacing: 8) {
                 Text("Teléfono")
                     .font(.headline)
@@ -193,7 +192,6 @@ struct UserProfileView: View {
                     .cornerRadius(10)
             }
             
-            // Country selection
             VStack(alignment: .leading, spacing: 8) {
                 Text("País")
                     .font(.headline)
@@ -279,7 +277,7 @@ struct UserProfileView: View {
     
     // MARK: - Save Action
     func saveUserProfile() {
-        // Validate required fields
+
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "El nombre es obligatorio"
             showingValidationAlert = true
@@ -298,8 +296,7 @@ struct UserProfileView: View {
             return
         }
         
-        // Create new user
-        var newUser = User(
+        var user = User(
             name: name,
             gender: gender,
             birthDate: birthDate,
@@ -308,19 +305,19 @@ struct UserProfileView: View {
         )
         
         if let selectedImage = selectedImage {
-            newUser.setImage(selectedImage)
+            user.setImage(selectedImage)
+        } else if let currentUser = userManager.currentUser, let userImage = currentUser.image?.asUIImage() {
+            user.setImage(userImage)
         }
         
-        // Save user data
-        userManager.saveUser(newUser)
+        userManager.saveUser(user)
         
-        // Dismiss the view
         dismiss()
     }
 }
-
-struct UserProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserProfileView()
-    }
+// MARK: - Preview
+#Preview {
+    EditProfileView(userManager: UserManager())
 }
+        
+   

@@ -8,9 +8,8 @@
 import SwiftUI
 import PhotosUI
 
-// Extensión en View que permite leer el tamaño usando un modificador.
+
 extension View {
-    
     func debugStroke(_ color: Color = .red) -> some View {
         self.overlay(Rectangle().stroke(color, lineWidth: 1))
     }
@@ -19,9 +18,8 @@ extension View {
 
 struct PetRegistrationView: View {
     @Environment(\.dismiss) private var dismiss
-   var petManager = PetManager()
+    var petManager: PetManager
     
-    // Form fields
     @State private var name: String = ""
     @State private var sex: PetSex = .male
     @State private var birthDate: Date = Date()
@@ -29,16 +27,15 @@ struct PetRegistrationView: View {
     @State private var breed: String = ""
     @State private var isSterilized: Bool = false
     
-    // Image picker
     @State private var selectedImage: UIImage?
     @State private var showingImagePicker: Bool = false
     @State private var photoItem: PhotosPickerItem?
     
-    // Validation
     @State private var showingValidationAlert: Bool = false
     @State private var errorMessage: String = ""
     
-    // Date formatter for display
+    @State private var showSaveButton = true
+    
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -47,55 +44,60 @@ struct PetRegistrationView: View {
     }()
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.gray.opacity(0.1).ignoresSafeArea()
+        ZStack {
+            Color.gray.opacity(0.1).ignoresSafeArea()
+            
+            VStack(spacing: 0) {
+                headerView
                 
-                VStack(spacing: 0) {
-                    // Header
-                    headerView
-                    
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            // Pet image selection
-                            imageSelectionView
-                            
-                            // Form fields
-                            formFieldsView
+                ScrollView {
+                    VStack(spacing: 20) {
+                        imageSelectionView
+                        
+                        formFieldsView
+                        
+                        Button(action: savePet) {
+                            Text("Guardar")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.accent)
+                                .cornerRadius(10)
                         }
-                        .padding()
+                        .padding(.top, 20)
                     }
+                    .padding()
                 }
             }
-            
-            .alert("Error", isPresented: $showingValidationAlert) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(errorMessage)
-            }
-            .photosPicker(isPresented: $showingImagePicker, selection: $photoItem)
-            .onChange(of: photoItem) { oldValue, newValue in
-                Task {
-                    if let data = try? await newValue?.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data) {
-                        selectedImage = image
-                    }
+        }
+        .navigationBarBackButtonHidden(true)
+        .alert("Error", isPresented: $showingValidationAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage)
+        }
+        .photosPicker(isPresented: $showingImagePicker, selection: $photoItem)
+        .onChange(of: photoItem) { _, newValue in
+            Task {
+                if let data = try? await newValue?.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    selectedImage = image
                 }
             }
         }
     }
     
+    
     // MARK: - Header View
     
     private var headerView: some View {
         ZStack {
-            // Title in the center
             Text("Registro de Mascotas")
                 .font(.custom("Noteworthy", size: 28))
                 .foregroundColor(Color.red.opacity(0.7))
                 .frame(maxWidth: .infinity)
             
-            // Back button aligned to the leading edge
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "chevron.left")
@@ -105,7 +107,7 @@ struct PetRegistrationView: View {
                 }
                 .padding(.leading, 20)
                 
-                Spacer() // Push the button to the left
+                Spacer()
             }
         }
         .padding(.vertical, 10)
@@ -168,7 +170,6 @@ struct PetRegistrationView: View {
                     )
             }
             
-            // Sex
             VStack(alignment: .leading, spacing: 5) {
                 Text("Sexo")
                     .font(.headline)
@@ -186,7 +187,6 @@ struct PetRegistrationView: View {
                 }
             }
             
-            // Birth date
             VStack(alignment: .leading, spacing: 5) {
                 Text("Fecha de nacimiento")
                     .font(.headline)
@@ -204,7 +204,6 @@ struct PetRegistrationView: View {
                     )
             }
             
-            // Species
             VStack(alignment: .leading, spacing: 5) {
                 Text("Especie")
                     .font(.headline)
@@ -231,7 +230,6 @@ struct PetRegistrationView: View {
                 }
             }
             
-            // Breed
             VStack(alignment: .leading, spacing: 5) {
                 Text("Raza")
                     .font(.headline)
@@ -246,7 +244,6 @@ struct PetRegistrationView: View {
                     )
             }
             
-            // Sterilized
             VStack(alignment: .leading, spacing: 5) {
                 Text("¿Tu mascota está esterilizada?")
                     .font(.headline)
@@ -265,54 +262,6 @@ struct PetRegistrationView: View {
                 }
             }
         }
-    }
-    
-    // MARK: - Navigation Bar View
-    
-    private var navigationBarView: some View {
-        HStack(spacing: 0) {
-            Button(action: {}) {
-                VStack(spacing: 5) {
-                    Image(systemName: "pawprint")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    Text("Mascotas")
-                        .font(.caption)
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.gray)
-            }
-            
-            Button(action: {}) {
-                VStack(spacing: 5) {
-                    Image(systemName: "calendar")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    Text("Citas")
-                        .font(.caption)
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.gray)
-            }
-            
-            Button(action: {}) {
-                VStack(spacing: 5) {
-                    Image(systemName: "heart")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 25, height: 25)
-                    Text("Salud")
-                        .font(.caption)
-                }
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.gray)
-            }
-        }
-        .padding(.vertical, 12)
-        .background(Color.white)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -5)
     }
     
     // MARK: - Helper Views
@@ -344,7 +293,6 @@ struct PetRegistrationView: View {
     // MARK: - Save Action
     
     private func savePet() {
-        // Validate required fields
         if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "El nombre es obligatorio"
             showingValidationAlert = true
@@ -357,7 +305,6 @@ struct PetRegistrationView: View {
             return
         }
         
-        // Create new pet
         var newPet = Pet(
             name: name,
             sex: sex,
@@ -370,18 +317,15 @@ struct PetRegistrationView: View {
             newPet.setImage(selectedImage)
         }
         
-        // Add to manager
-        petManager.addPet(newPet)
+        petManager.pets.append(newPet)
         
-        // Dismiss the view
         dismiss()
     }
 }
-
 // MARK: - Preview
 
 struct PetRegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        PetRegistrationView()
+        PetRegistrationView(petManager: PetManager())
     }
 }

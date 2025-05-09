@@ -9,17 +9,16 @@ import SwiftUI
 
 struct NotificationsView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var notificationsEnabled = false
+    @AppStorage("notificationEnabled") private var notificationsEnabled = true
     @Namespace private var animation
     
     var body: some View {
         VStack(spacing: 0) {
-            // Custom header
+
             headerView
             
             ScrollView {
                 VStack(spacing: 24) {
-                    // Bell icon with animated color change
                     Circle()
                         .fill(notificationsEnabled ? Color.accent : .gray)
                         .frame(width: 120, height: 120)
@@ -35,7 +34,7 @@ struct NotificationsView: View {
                         .scaleEffect(notificationsEnabled ? 1.05 : 1.0)
                         .animation(.spring(response: 0.4), value: notificationsEnabled)
                     
-                    // Toggle section with animated background and text changes
+                   
                     HStack {
                         Text(notificationsEnabled ?
                              "Todas las notificaciones están activadas" :
@@ -59,7 +58,6 @@ struct NotificationsView: View {
                     )
                     .padding(.horizontal)
                     
-                    // Info section with animated text transition
                     HStack(alignment: .top, spacing: 12) {
                         Image(systemName: "info.circle")
                             .foregroundStyle(.gray)
